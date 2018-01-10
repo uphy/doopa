@@ -1,0 +1,39 @@
+@startuml
+
+node Remote {
+    database RemoteRepository 
+    component GitDaemon
+    GitDaemon - RemoteRepository
+}
+
+node Local {
+    component Docker
+    component Git
+    component Application {
+        component Project
+        component Workspace
+        component ProjectRepository
+        component WorkspaceRepository
+        component DeployService
+        component GitHook
+
+        GitHook --> ProjectRepository: update
+        GitHook --> DeployService: deploy
+        GitHook --> WorkspaceRepository
+        
+        DeployService --> Docker
+        ProjectRepository "1" *-- "*" Project
+        WorkspaceRepository "1" *-- "*" Workspace
+        ProjectRepository ..> Git
+        Workspace "1" . "*" Project
+
+        DeployService -[hidden]r- ProjectRepository
+        Docker -[hidden]r- Application
+    }
+}
+
+Remote -[hidden]l-Local
+
+Git --> GitDaemon: clone/fetch
+
+@enduml

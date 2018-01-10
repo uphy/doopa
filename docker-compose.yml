@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  web:
+    build: .
+    ports:
+    - "8080:8080"
+  gogs:
+    image: gogs/gogs
+    ports:
+    - "3000:3000"
+    volumes:
+    - "./data/gogs:/data"
